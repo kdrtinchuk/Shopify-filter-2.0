@@ -1,0 +1,153 @@
+//It is base CSS, you can change and add CSS as per your site requirement. It is not compulsory.......
+
+    .filter-wrapper {
+      display: flex;
+      padding-bottom: 50px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .filter-box {
+      margin-right: 20px;
+      position: relative;
+    }
+    .filter-values {
+      display: none;
+      position: absolute;
+      padding: 10px;
+      border: 2px solid var(--theme-color);
+        border-radius: 19px;
+        width: 250px;
+        z-index: 10;
+        background: #fff;
+        top: 52px;
+        }
+    .filter-header {
+      display: flex;
+      border: 2px solid var(--theme-color);
+        border-radius: 19px;
+        padding: 10px;
+        padding-right: 50px;
+        position: relative;
+        cursor: pointer;
+        }
+    .filter-header h4 {
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 20px;
+    }
+    .filter-header svg {
+      width: 15px;
+      position: absolute;
+      right: 15px;
+      top: 15px;
+    }
+    .filter-values li {
+      padding-bottom: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    .filter-values li.active {
+      color: var(--theme-color);
+        }
+    .filter-values li.disabled {
+      color: #ebebeb;
+      pointer-events: none;
+    }
+    .active-facets.active-facets-desktop {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .active-facets__button-inner {
+      display: flex;
+      padding: 5px 12px;
+      font-size: 12px;
+      justify-content: space-between;
+      align-items: center;
+      margin-right: 10px;
+      margin-top: 12px;
+    }
+    .active-facets__button-inner svg {
+      margin-left: 8px;
+    }
+    .active-facets .filter-remove:only-child {
+      display: none;
+    }
+    .active-facets__button-remove span {
+      font-size: 12px;
+      line-height: 20px;
+      font-weight: 500;
+      font-family: var(--first-font);
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
+        margin-top: 12px;
+        display: block;
+        }
+    
+    .ui-widget-content {
+      height: 4px;
+      background: #e6e6e6;
+      border-radius: 4px;
+      position: relative;
+      margin: 20px auto 10px auto;
+      width: 90%;
+    }
+    .ui-slider-range {
+      position: absolute;
+      z-index: 1;
+      height: 100%;
+      background: #d51d00;
+      border-radius: 4px;
+    }
+    .ui-slider-handle {
+      position: absolute;
+      left: 0;
+      top: -9px;
+      margin-left: -11px;
+      width: 22px;
+      height: 22px;
+      z-index: 2;
+    }
+    .ui-slider-handle:before {
+      content: "";
+      position: absolute;
+      display: block;
+      top: calc(50% - 22px);
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+    }
+    .ui-slider-handle:after {
+      content: "";
+      display: block;
+      width: 22px;
+      height: 22px;
+      background: #ffffff;
+      border: 2px solid #d51d00;
+      border-radius: 22px;
+      cursor: pointer;
+      transition: .15s transform ease-out;
+      outline: none;
+    }
+    .ui-slider-handle:focus {
+      outline: none;
+    }
+    .ui-slider-handle:hover::after, .ui-slider-handle:focus::after {
+      transform: scale(1.1);
+      outline: none;
+    }
+    .empty_collection {
+      text-align: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+    .empty_collection a {
+      text-decoration: underline;
+      color: #d51d00;
+    }
