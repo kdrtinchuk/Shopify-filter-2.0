@@ -1,0 +1,85 @@
+//Make changes as per your requirement for this section.
+//[data-collection] This attribute is require in you product gird parent element.
+
+{% assign limit = section.settings.products_per_page %}
+
+{%- liquid
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+  assign total_active_values = 0
+  if collection.url
+    assign results_url = collection.url
+  else 
+    assign terms = collection.terms | escape
+    assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+  endif
+-%}
+
+<section class="shop-grid-section">
+  <div class="container">
+    <div class="collection-grid-view">
+      {%- paginate collection.products by limit -%}
+      {% include 'collection-filter' %}
+      <div class="collection-wrapper" data-collection>
+        {%- if collection.products.size == 0 -%}
+        <div class="product-row flex empty_collection">
+          <p>
+            {{ 'sections.collection_template.empty' | t }}<br>
+            {{ 'sections.collection_template.use_fewer_filters_html' | t: link: collection.url, class: "underlined-link link" }}
+          </p>
+        </div>
+        {%- else -%}
+        <div class="product-row flex more-collection">
+          {% for product in collection.products %}
+          {% include 'product-card' %}
+          {% endfor %}
+        </div>
+        {%- if paginate.pages > 1 -%}
+        <div class="collection-loader">
+          <a class="load_more collection" href="{{ paginate.next.url }}" ></a>
+        </div>
+        {%- endif -%}
+        {%- endif -%}
+      </div>
+      {%- endpaginate -%}
+    </div>
+  </div>
+</section>
+
+<style>
+  .collection-loader,
+  .collection-loader img {
+    margin: 0 auto;
+    text-align: center;
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Collection",
+    "settings": [
+      {
+        "type": "range",
+        "id": "products_per_page",
+        "min": 8,
+        "max": 24,
+        "step": 4,
+        "default": 16,
+        "label": "Products per page"
+      },
+	  {
+        "type": "header",
+        "content": "Filter"
+      },
+	  {
+        "type": "checkbox",
+        "id": "show_filter",
+        "label": "Display filter?"
+      },
+      {
+        "type": "textarea",
+        "id": "filter_by",
+        "label": "Tag filter"
+      }
+	]
+  }
+{% endschema %}
