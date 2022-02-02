@@ -1,0 +1,138 @@
+// Make this file in the snippet and add in collection template when you want the filter......
+
+<div class="filter-wrapper" data-col="{{ collection.url }}" data-id="{{ section.id }}" data-filter-url>
+  {%- for filter in collection.filters -%}
+  {%- assign total_active_values = total_active_values | plus: filter.active_values.size -%}
+  {% case filter.type %}
+  {% when 'list' %}
+  <div class="filter-box" data-filter-box data-index="{{ forloop.index0 }}">
+    <div class="filter-header">
+      <h4>{{ filter.label | escape }}</h4>
+      <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-caret" viewBox="0 0 10 6">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor"></path>
+      </svg>
+    </div>
+    <div class="filter-values">
+      <ul>
+        {%- for value in filter.values -%}
+        <li class="{% if value.active %}active{% endif %} {% if value.count == 0 and value.active == false %} disabled{% endif %}"
+            data-value="{{ value.value }}"
+            data-name="{{ value.param_name }}"
+            data-filter-value>
+          <span>{{ value.label | escape }}</span><span>({{ value.count }})</span>
+        </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+  {% when 'price_range' %}
+  {% liquid
+                  assign currencies_using_comma_decimals = 'ANG,ARS,BRL,BYN,BYR,CLF,CLP,COP,CRC,CZK,DKK,EUR,HRK,HUF,IDR,ISK,MZN,NOK,PLN,RON,RUB,SEK,TRY,UYU,VES,VND' | split: ','
+                  assign uses_comma_decimals = false
+                  if currencies_using_comma_decimals contains cart.currency.iso_code
+                    assign uses_comma_decimals = true
+                  endif
+                %}
+  <div class="filter-box" data-filter-box data-filter-price-box data-index="{{ forloop.index0 }}">
+    <div class="filter-header">
+      <h4>{{ filter.label | escape }}</h4>
+      <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-caret" viewBox="0 0 10 6">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor"></path>
+      </svg>
+    </div>
+    <div class="filter-values">
+      {%- assign max_price_amount = filter.range_max | money | strip_html | escape -%}
+      <ul>
+        <li class="" data-name="{{ filter.min_value.param_name }}" data-filter-value>
+          <span class="field-currency">{{ cart.currency.symbol }}</span>
+          <input class="field__input cc-price-range__input--min"
+                 name="{{ filter.min_value.param_name }}"
+                 id="min_price" class="price-range-field"
+                 {%- if filter.min_value.value -%}
+                 {%- if uses_comma_decimals -%}
+                 value="{{ filter.min_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                 {%- else -%}
+                 value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                 {% endif %}
+                 {%- endif -%}
+                 type="number"
+                 placeholder="0"
+                 min="0"
+                 {%- if uses_comma_decimals -%}
+                 max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                 {%- else -%}
+                 max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                 {% endif %}
+                 >
+        </li>
+        <li class="" data-name="{{ filter.max_value.param_name }}" data-filter-value>
+          <span class="field-currency">{{ cart.currency.symbol }}</span>
+          <input class="field__input cc-price-range__input--max"
+                 name="{{ filter.max_value.param_name }}"
+                 id="max_price" class="price-range-field"
+                 {%- if filter.max_value.value -%}
+                 {%- if uses_comma_decimals -%}
+                 value="{{ filter.max_value.value | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                 {%- else -%}
+                 value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                 {% endif %}
+                 {%- endif -%}
+                 type="number"
+                 min="0"
+                 {%- if uses_comma_decimals -%}
+                 placeholder="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                 max="{{ filter.range_max | money_without_currency | replace: '.', '' | replace: ',', '.' }}"
+                 {%- else -%}
+                 placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                 max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                 {% endif %}
+                 >
+        </li>
+      </ul>
+      <div id="slider-range" class="price-filter-range" name="rangeInput"></div>
+    </div>
+  </div>
+  {% endcase %}
+  {%- endfor -%}
+  <div class="active-facets active-facets-desktop" data-active-filter>
+    {%- for filter in collection.filters -%}
+    {%- for value in filter.active_values -%}
+    <div class="filter-remove" data-remove>
+      <a href="{{ value.url_to_remove }}" class="active-facets__button active-facets__button--light">
+        <span class="active-facets__button-inner button button--tertiary" data-name="{{ value.param_name }}" data-value="{{ value.value }}">
+          {{ value.label | escape }}
+          {% render 'icon-close-small' %}
+        </span>
+      </a>
+    </div>
+    {%- endfor -%}
+    {% if filter.type == "price_range" %}
+    {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+    <div class="filter-remove price-remove" data-remove>
+      <a href="{{ filter.url_to_remove }}" class="active-facets__button active-facets__button--light">
+        <span class="active-facets__button-inner button button--tertiary">
+          {%- if filter.min_value.value -%}
+          {{ filter.min_value.value | money }}
+          {%- else -%}
+          {{ 0 | money }}
+          {%- endif -%}
+          -
+          {%- if filter.max_value.value -%}
+          {{ filter.max_value.value | money }}
+          {%- else -%}
+          {{ filter.range_max | money }}
+          {%- endif -%}
+          {% render 'icon-close-small' %}
+        </span>
+      </a>
+    </div>
+    {%- endif -%}
+    {% endif %}
+    {%- endfor -%}
+    <div class="filter-remove active-facets__button-wrapper">
+      <a href="{{ results_url }}" class="active-facets__button-remove underlined-link">
+        <span>Clear All</span>
+      </a>
+    </div>
+  </div>
+</div>
