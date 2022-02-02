@@ -1,5 +1,5 @@
 # Shopify-filter-2.0
-#Important
+**#Important**
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
 
