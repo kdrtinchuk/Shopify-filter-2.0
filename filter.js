@@ -188,7 +188,5 @@ $(document).ready(function(){
       var cur_end = max;
     }
     slider(cur_start, cur_end);
-    $("#min_price").val($("#slider-range").slider("values", 0));
-    $("#max_price").val($("#slider-range").slider("values", 1));
   });
 });
